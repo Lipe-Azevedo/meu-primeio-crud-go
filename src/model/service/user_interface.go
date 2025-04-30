@@ -5,7 +5,7 @@ import (
 	"github.com/Lipe-Azevedo/meu-primeio-crud-go/src/model"
 )
 
-func NewUserDomainInterface() UserDomainService {
+func NewUserDomainService() UserDomainService {
 	return &userDomainService{}
 }
 
