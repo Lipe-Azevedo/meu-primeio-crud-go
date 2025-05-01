@@ -32,7 +32,6 @@ package main
 import (
 	"log"
 
-	"github.com/Lipe-Azevedo/meu-primeio-crud-go/src/configuration/database/mongobd"
 	"github.com/Lipe-Azevedo/meu-primeio-crud-go/src/configuration/logger"
 	"github.com/Lipe-Azevedo/meu-primeio-crud-go/src/controller"
 	"github.com/Lipe-Azevedo/meu-primeio-crud-go/src/controller/routes"
@@ -47,8 +46,6 @@ func main() {
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
-
-	mongobd.InitConnection()
 
 	//Init dependencies
 	service := service.NewUserDomainService()
