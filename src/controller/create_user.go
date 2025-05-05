@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/Lipe-Azevedo/meu-primeio-crud-go/src/configuration/logger"
@@ -18,11 +17,16 @@ var (
 )
 
 func (uc *userControllerInterface) CreateUser(c *gin.Context) {
-	log.Println("Init CreateUser controller")
+	logger.Info(
+		"Init CreateUser controller",
+		zap.String("journey", "createUser"))
 	var userRequest request.UserRequest
 
 	if err := c.ShouldBindJSON(&userRequest); err != nil {
-		log.Printf("Error trying to marshal object, error=%s\n", err.Error())
+		logger.Error(
+			"Error trying to validate user info",
+			err,
+			zap.String("journey", "createUser"))
 		errRest := validation.ValidateUserError(err)
 
 		c.JSON(errRest.Code, errRest)
@@ -38,11 +42,18 @@ func (uc *userControllerInterface) CreateUser(c *gin.Context) {
 
 	domainResult, err := uc.service.CreateUser(domain)
 	if err != nil {
+		logger.Error(
+			"Error trying to call CreateUser service",
+			err,
+			zap.String("journey", "createUser"))
+
 		c.JSON(err.Code, err)
 		return
 	}
 
-	logger.Info("User created sucessfully",
+	logger.Info(
+		"CreateUser controller executed successfully",
+		zap.String("userId", domainResult.GetID()),
 		zap.String("journey", "createUser"))
 
 	c.JSON(http.StatusOK, view.ConvertDomainToResponse(
