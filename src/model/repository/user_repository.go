@@ -1,0 +1,25 @@
+package repository
+
+import (
+	"github.com/Lipe-Azevedo/meu-primeio-crud-go/src/configuration/rest_err"
+	"github.com/Lipe-Azevedo/meu-primeio-crud-go/src/model"
+	"go.mongodb.org/mongo-driver/mongo"
+)
+
+func NewUserRepository(
+	database *mongo.Database,
+) UserRepository {
+	return &userRepository{
+		database,
+	}
+}
+
+type userRepository struct {
+	dataBaseConnection *mongo.Database
+}
+
+type UserRepository interface {
+	CreateUser(
+		userDomain model.UserDomainInterface,
+	) (model.UserDomainInterface, *rest_err.RestErr)
+}
