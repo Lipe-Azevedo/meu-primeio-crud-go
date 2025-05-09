@@ -8,7 +8,8 @@ import (
 	"github.com/Lipe-Azevedo/meu-primeio-crud-go/src/configuration/rest_err"
 	"github.com/Lipe-Azevedo/meu-primeio-crud-go/src/view"
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
+
+	// "go.mongodb.org/mongo-driver/bson/primitive"
 	"go.uber.org/zap"
 )
 
@@ -20,21 +21,21 @@ func (uc *userControllerInterface) FindUserByID(c *gin.Context) {
 
 	userId := c.Param("userId")
 
-	if _, err := uuid.Parse(userId); err != nil {
-		logger.Error(
-			"Error trying to validate userId.",
-			err,
-			zap.String("journey", "findUserByID"),
-		)
-		errorMessage := rest_err.NewBadRequestError(
-			"UserID is not valid id",
-		)
+	// if _, err := primitive.ObjectIDFromHex(userId); err != nil {
+	// 	logger.Error(
+	// 		"Error trying to validate userId.",
+	// 		err,
+	// 		zap.String("journey", "findUserByID"),
+	// 	)
+	// 	errorMessage := rest_err.NewBadRequestError(
+	// 		"UserID is not valid id",
+	// 	)
 
-		c.JSON(errorMessage.Code, errorMessage)
-		return
-	}
+	// 	c.JSON(errorMessage.Code, errorMessage)
+	// 	return
+	// }
 
-	userDomain, err := uc.service.FindUserByEmailServices(userId)
+	userDomain, err := uc.service.FindUserByIDServices(userId)
 	if err != nil {
 		logger.Error(
 			"Error trying to call findUserByID services.",
