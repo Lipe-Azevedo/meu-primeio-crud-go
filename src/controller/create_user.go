@@ -19,7 +19,8 @@ var (
 func (uc *userControllerInterface) CreateUser(c *gin.Context) {
 	logger.Info(
 		"Init CreateUser controller.",
-		zap.String("journey", "createUser"))
+		zap.String("journey", "createUser"),
+	)
 	var userRequest request.UserRequest
 
 	if err := c.ShouldBindJSON(&userRequest); err != nil {

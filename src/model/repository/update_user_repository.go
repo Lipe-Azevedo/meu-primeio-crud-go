@@ -8,38 +8,43 @@ import (
 	"github.com/Lipe-Azevedo/meu-primeio-crud-go/src/configuration/rest_err"
 	"github.com/Lipe-Azevedo/meu-primeio-crud-go/src/model"
 	"github.com/Lipe-Azevedo/meu-primeio-crud-go/src/model/repository/entity/converter"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.uber.org/zap"
 )
 
-func (ur *userRepository) CreateUser(
+func (ur *userRepository) UpdateUser(
+	userId string,
 	userDomain model.UserDomainInterface,
-) (model.UserDomainInterface, *rest_err.RestErr) {
+) *rest_err.RestErr {
 	logger.Info(
-		"Init createUser repository.",
-		zap.String("journey", "createUser"))
+		"Init updateUser repository.",
+		zap.String("journey", "updateUser"),
+	)
 
 	collection_name := os.Getenv(MONGODB_USER_DB)
-
 	collection := ur.dataBaseConnection.Collection(collection_name)
 
 	value := converter.ConvertDomainToEntity(userDomain)
+	userIdHex, _ := primitive.ObjectIDFromHex(userId)
 
-	result, err := collection.InsertOne(context.Background(), value)
+	filter := bson.D{{Key: "_id", Value: userIdHex}}
+	update := bson.D{{Key: "$set", Value: value}}
+
+	_, err := collection.UpdateOne(context.Background(), filter, update)
 	if err != nil {
 		logger.Error(
-			"Error trying to create user.",
+			"Error trying to update user.",
 			err,
-			zap.String("journey", "createUser"))
-		return nil, rest_err.NewInternalServerError(err.Error())
+			zap.String("journey", "updateUser"),
+		)
+		return rest_err.NewInternalServerError(err.Error())
 	}
 
-	value.ID = result.InsertedID.(primitive.ObjectID)
 	logger.Info(
-		"CreateUser repository executed suceeefully.",
-		zap.String("userId", value.ID.Hex()),
-		zap.String("journey", "createUser"),
+		"updateUser repository executed suceeefully.",
+		zap.String("userId", userId),
+		zap.String("journey", "updateUser"),
 	)
-
-	return converter.ConvertEntityToDomain(*value), nil
+	return nil
 }

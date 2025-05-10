@@ -21,7 +21,8 @@ func (ur userRepository) FindUserByID(
 ) (model.UserDomainInterface, *rest_err.RestErr) {
 	logger.Info(
 		"Init findUserByID repository.",
-		zap.String("journey", "findUserByID"))
+		zap.String("journey", "findUserByID"),
+	)
 
 	collection_name := os.Getenv(MONGODB_USER_DB)
 
@@ -43,23 +44,24 @@ func (ur userRepository) FindUserByID(
 			logger.Error(
 				errorMessage,
 				err,
-				zap.String("journey", "findUserByID"))
+				zap.String("journey", "findUserByID"),
+			)
 			return nil, rest_err.NewNotFoundError(errorMessage)
 		}
 		errorMessage := "Error trying to find user by ID."
 		logger.Error(
 			errorMessage,
 			err,
-			zap.String("journey", "findUserByID"))
-
+			zap.String("journey", "findUserByID"),
+		)
 		return nil, rest_err.NewInternalServerError(errorMessage)
 	}
 
 	logger.Info(
 		"FindUserByID repository executed suceeefully.",
 		zap.String("journey", "findUserByID"),
-		zap.String("userId", userEntity.ID.Hex()))
-
+		zap.String("userId", userEntity.ID.Hex()),
+	)
 	return converter.ConvertEntityToDomain(*userEntity), nil
 }
 
@@ -68,7 +70,8 @@ func (ur userRepository) FindUserByEmail(
 ) (model.UserDomainInterface, *rest_err.RestErr) {
 	logger.Info(
 		"Init findUserByEmail repository.",
-		zap.String("journey", "findUserByEmail"))
+		zap.String("journey", "findUserByEmail"),
+	)
 
 	collection_name := os.Getenv(MONGODB_USER_DB)
 
@@ -89,15 +92,16 @@ func (ur userRepository) FindUserByEmail(
 			logger.Error(
 				errorMessage,
 				err,
-				zap.String("journey", "findUserByEmail"))
+				zap.String("journey", "findUserByEmail"),
+			)
 			return nil, rest_err.NewNotFoundError(errorMessage)
 		}
 		errorMessage := "Error trying to find user by email."
 		logger.Error(
 			errorMessage,
 			err,
-			zap.String("journey", "findUserByEmail"))
-
+			zap.String("journey", "findUserByEmail"),
+		)
 		return nil, rest_err.NewInternalServerError(errorMessage)
 	}
 
@@ -105,7 +109,7 @@ func (ur userRepository) FindUserByEmail(
 		"FindUserByEmail repository executed suceeefully.",
 		zap.String("journey", "findUserByEmail"),
 		zap.String("email", email),
-		zap.String("userId", userEntity.ID.Hex()))
-
+		zap.String("userId", userEntity.ID.Hex()),
+	)
 	return converter.ConvertEntityToDomain(*userEntity), nil
 }
